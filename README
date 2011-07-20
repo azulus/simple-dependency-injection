@@ -1,0 +1,31 @@
+This is a very simple dependency injection package built towards auto-instantiating classes and injecting them into other classes in a managable manner. Auto-instantiation syntax is a clone of Spring's annotation formatting, example:
+
+	@Controller
+	public class MyController implements MyControllerInterface { }
+
+This will create an instance of MyController and use that instance whenever a value of MyController or MyControllerInterface is needed. Alternately, you can use @Repository, @Service, and @Component (as per Spring), though there's no difference between the functionality at this point.
+
+For dependency injection, the injection acts very much like Guice minus the configuration files, example:
+
+	@Component
+	public class MyConfig implements SomeServiceConfig { }
+	
+	@Service
+	public class MyService implements SomeService {
+		private SomeServiceConfig config;
+		
+		@Inject
+		public MyService( SomeServiceConfig config ) {
+			this.config = config;
+		}
+	}
+
+This allows for classes that can be injected into safely but still allows for unit-testing and auto-instantiation. Note that the ContextListener must be loaded (in the web.xml file) for any of the injection to take place:
+
+	<web-app>
+	        <listener>
+	                <listener-class>com.villainsoft.core.injection.utils.ContextListener</listener-class>
+	        </listener>
+	
+	        <!-- other webappy stuff here -->
+	</web-app>
